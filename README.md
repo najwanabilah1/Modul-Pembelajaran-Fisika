@@ -35,10 +35,4 @@ Catatan: Jika ada skrip JavaScript eksternal atau fitur yang membutuhkan server 
 - Beri nama file gambar dan aset secara deskriptif.
 - Jika menambahkan fitur interaktif, dokumentasikan dependensi atau langkah setup di README ini.
 
-**Lisensi & Kredit**
 
-Gunakan sesuai kebutuhan. Tambahkan informasi lisensi di sini bila diperlukan.
-
----
-
-Jika Anda ingin saya tambahkan bagian lain (contoh screenshot, cara menjalankan server lokal, atau lisensi), beri tahu saja dan saya akan perbarui `README.md`.
