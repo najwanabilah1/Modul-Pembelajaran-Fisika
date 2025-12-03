@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Game - Susun Rangkaian Listrik | E-Fisika</title>
+    <link rel="stylesheet" href="game.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    <header>
+      <div class="navbar-container">
+        <a href="index.html" class="logo">
+          <i class="fas fa-flask-vial"></i>
+          E-FISIKA
+        </a>
+        <nav id="mobileMenu">
+          <a href="index.html">
+            <i class="fas fa-home"></i> Beranda
+          </a>
+          <a href="materi.html">
+            <i class="fas fa-book"></i> Materi
+          </a>
+          <a href="quiz.html">
+            <i class="fas fa-question-circle"></i> Quiz
+          </a>
+          <a href="game.html">
+            <i class="fas fa-gamepad"></i> Game
+          </a>
+        </nav>
+        <nav>
+          <a href="index.html">
+            <i class="fas fa-home"></i> Beranda
+          </a>
+          <a href="materi.html">
+            <i class="fas fa-book"></i> Materi
+          </a>
+          <a href="quiz.html">
+            <i class="fas fa-question-circle"></i> Quiz
+          </a>
+          <a href="game.html">
+            <i class="fas fa-gamepad"></i> Game
+          </a>
+        </nav>
+        <button class="menu-toggle" onclick="toggleMobileMenu()">
+          <i class="fas fa-bars"></i>
+        </button>
+      </div>
+    </header>
+
+    <div class="hero-section">
+      <h1><i class="fas fa-gamepad"></i> Tantangan Sirkuit Interaktif</h1>
+      <p>Susun rangkaian listrik dengan benar untuk menyelesaikan tantangan!</p>
+    </div>
+
+    <main>
+      <div class="game-area">
+        <h2 id="level-title"><i class="fas fa-puzzle-piece"></i> Level 1: Rangkaian Seri Dasar</h2>
+        <div class="info-card" id="infoCard" role="region" aria-label="Instruksi Permainan">
+          <button class="info-close" aria-label="Tutup instruksi" onclick="toggleInfoCard()">
+            <i class="fas fa-times"></i>
+          </button>
+          <h3>Instruksi Singkat</h3>
+          <div class="info-body">
+            <ol>
+              <li>Seret komponen dari panel <strong>Komponen Tersedia</strong> ke area kanvas untuk menyusun rangkaian.</li>
+              <li>Pastikan ada <strong>baterai</strong>, <strong>resistor</strong>, dan <strong>kabel</strong> untuk membuat rangkaian lengkap.</li>
+              <li>Tekan tombol <strong>Cek Rangkaian</strong> untuk melihat analisis (tegangan, hambatan, arus).</li>
+              <li>Jika ingin mulai ulang, tekan <strong>Reset</strong>.</li>
+            </ol>
+            <p class="small">Tip: Klik ikon instruksi untuk membuka atau menutup kartu instruksi.</p>
+          </div>
+        </div>
+
+        <button id="infoToggle" class="info-toggle" aria-label="Buka instruksi" onclick="toggleInfoCard()">
+          <i class="fas fa-info-circle"></i>
+        </button>
+
+        <div class="level-selector">
+          <button class="level-btn active" onclick="selectLevel(1)" data-level="1">
+            <i class="fas fa-star"></i> Level 1
+          </button>
+          <button class="level-btn" onclick="selectLevel(2)" data-level="2">
+            <i class="fas fa-star-half-alt"></i> Level 2
+          </button>
+          <button class="level-btn" onclick="selectLevel(3)" data-level="3">
+            <i class="fas fa-flame"></i> Level 3
+          </button>
+          <button class="level-btn" onclick="selectLevel(4)" data-level="4">
+            <i class="fas fa-skull"></i> Level 4
+          </button>
+        </div>
+        
+        <div class="game-container">
+          <div class="instructions">
+            <h3>🎯 Objektif:</h3>
+            <p id="level-objective">
+              Rangkaikan komponen berikut sehingga arus mengalir sempurna dari baterai melalui resistor, dan kembali ke baterai. 
+              Rumus yang harus dipenuhi: $V = I \times R$
+            </p>
+            <p id="level-condition"><strong>Kondisi:</strong> Baterai 12V, Resistor 6Ω, Target Arus: 2A</p>
+          </div>
+
+          <div class="game-board">
+            <div class="components-available">
+              <h3>Komponen Tersedia:</h3>
+              <div class="component-list" id="component-list">
+                <div class="component" draggable="true" data-component="battery12">
+                  <i class="fas fa-battery-full"></i>
+                  <span>Baterai 12V</span>
+                </div>
+                <div class="component" draggable="true" data-component="battery24">
+                  <i class="fas fa-battery-three-quarters"></i>
+                  <span>Baterai 24V</span>
+                </div>
+                <div class="component" draggable="true" data-component="resistor6">
+                  <i class="fas fa-square"></i>
+                  <span>Resistor 6Ω</span>
+                </div>
+                <div class="component" draggable="true" data-component="resistor12">
+                  <i class="fas fa-square"></i>
+                  <span>Resistor 12Ω</span>
+                </div>
+                <div class="component" draggable="true" data-component="resistor4">
+                  <i class="fas fa-square"></i>
+                  <span>Resistor 4Ω</span>
+                </div>
+                <div class="component" draggable="true" data-component="wire">
+                  <i class="fas fa-minus"></i>
+                  <span>Kabel</span>
+                </div>
+                <div class="component" draggable="true" data-component="bulb">
+                  <i class="fas fa-lightbulb"></i>
+                  <span>Lampu</span>
+                </div>
+                <div class="component" draggable="true" data-component="switch">
+                  <i class="fas fa-toggle-on"></i>
+                  <span>Switch</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="circuit-canvas" id="circuit-canvas">
+              <p style="color: #999; padding-top: 100px;">
+                <i class="fas fa-arrow-left"></i> Seret komponen ke sini untuk menyusun rangkaian
+              </p>
+            </div>
+
+            <div class="circuit-info">
+              <h3>Analisis Rangkaian:</h3>
+              <div id="circuit-analysis">
+                <p>Belum ada komponen yang ditambahkan</p>
+              </div>
+              <button id="check-circuit" class="btn-check">
+                <i class="fas fa-check-circle"></i> Cek Rangkaian
+              </button>
+              <button id="reset-circuit" class="btn-reset">
+                <i class="fas fa-redo"></i> Reset
+              </button>
+              <div class="phet-panel">
+                <h4><i class="fas fa-external-link-alt"></i> Coba simulasi terkait untuk belajar lebih jauh</h4>
+                <ul class="phet-links">
+                  <li><a href="https://phet.colorado.edu/sims/html/circuit-construction-kit-ac/latest/circuit-construction-kit-ac_all.html?locale=in" target="_blank" rel="noopener">Circuit Construction Kit: AC</a></li>
+                  <li><a href="https://phet.colorado.edu/en/simulations?locale=in" target="_blank" rel="noopener">Jelajahi semua simulasi PhET</a></li>
+                  <li><a href="https://phet.colorado.edu/sims/html/ohms-law/latest/ohms-law_all.html?locale=in" target="_blank" rel="noopener">Ohm's Law</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+
+    <!-- Modal Popup -->
+    <div class="modal-overlay" id="modalOverlay" onclick="closeModalOnBackdrop(event)">
+      <div class="modal-content" id="modalContent">
+        <button class="modal-close" onclick="closeModal()">
+          <i class="fas fa-times"></i>
+        </button>
+        <div class="modal-header">
+          <div class="modal-icon" id="modalIcon">⭐</div>
+        </div>
+        <div class="modal-body">
+          <h2 id="modalTitle">Selamat!</h2>
+          <p id="modalMessage">Rangkaian Anda benar!</p>
+          <div class="modal-info" id="modalInfo"></div>
+          <div class="modal-tips" id="modalTips" style="display: none;">
+            <h4>💡 Tips untuk Perbaikan:</h4>
+            <ul id="tipsList"></ul>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="modal-btn btn-primary" onclick="closeModal()">
+            <i class="fas fa-redo"></i> Coba Lagi
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <p>&copy; 2025 E-Fisika | Platform Pembelajaran Listrik Dinamis.</p>
+    </footer>
+
+    <script>
+       document.addEventListener("DOMContentLoaded", function () {
+        setTimeout(function () {
+          renderMathInElement(document.body, {
+            delimiters: [
+              { left: "$$", right: "$$", display: true },
+              { left: "$", right: "$", display: false },
+            ],
+            strict: false,
+            throwOnError: false,
+          });
+        }, 100);
+      });
+
+      function toggleMobileMenu() {
+        const menu = document.getElementById("mobileMenu");
+        menu.classList.toggle("active");
+      }
+      
+      // Level definitions with progression
+      const levels = {
+        1: {
+          title: 'Level 1: Rangkaian Seri Dasar',
+          objective: 'Susun rangkaian seri sederhana dengan baterai dan resistor tunggal.',
+          condition: 'Baterai 12V, Resistor 6Ω (hanya satu resistor boleh ada). Target Arus: 2A',
+          requiredComponents: ['battery12', 'resistor6', 'wire'],
+          targetCurrent: 2,
+          targetVoltage: 12,
+          targetResistance: 6,
+          maxComponents: 5,
+          description: 'Pada rangkaian seri, hambatan total = R1 + R2 + ... Arus sama di setiap titik.'
+        },
+        2: {
+          title: 'Level 2: Rangkaian Paralel',
+          objective: 'Susun rangkaian paralel dengan dua resistor sama besar.',
+          condition: 'Baterai 12V, Dua Resistor 12Ω (paralel). Target Arus Total: 2A',
+          requiredComponents: ['battery12', 'resistor12', 'resistor12', 'wire'],
+          targetCurrent: 2,
+          targetVoltage: 12,
+          targetResistance: 6, // 12||12 = 6
+          maxComponents: 7,
+          description: 'Dalam rangkaian paralel: 1/R_total = 1/R1 + 1/R2. Tegangan sama di setiap cabang.'
+        },
+        3: {
+          title: 'Level 3: Rangkaian Campuran (Kompleks)',
+          objective: 'Susun rangkaian campuran (seri-paralel) dengan tiga resistor berbeda.',
+          condition: 'Baterai 24V, Resistor 12Ω (seri), kemudian 2× Resistor 4Ω (paralel). Target Arus: 1.5A',
+          requiredComponents: ['battery24', 'resistor12', 'resistor4', 'resistor4', 'wire'],
+          targetCurrent: 1.5,
+          targetVoltage: 24,
+          targetResistance: 16, // 12 + (4||4)
+          maxComponents: 10,
+          description: 'Rangkaian campuran menggabungkan seri dan paralel. Hitung hambatan dengan hati-hati!'
+        },
+        4: {
+          title: 'Level 4: Challenge+ (Ekstra Sulit)',
+          objective: 'Desain rangkaian kustom untuk mencapai arus yang sangat spesifik.',
+          condition: 'Baterai 24V, pilih kombinasi resistor untuk mencapai Arus: 1.2A (R_total harus ≈ 20Ω)',
+          requiredComponents: ['battery24', 'wire'],
+          targetCurrent: 1.2,
+          targetVoltage: 24,
+          targetResistance: 20,
+          maxComponents: 8,
+          description: 'Tantangan terbuka! Gunakan kombinasi resistor apa pun untuk mencapai target arus tepat 1.2A.'
+        }
+      };
+
+      let currentLevel = 1;
+      let circuit = {
+        components: [],
+        voltage: 0,
+        resistance: 0,
+        current: 0
+      };
+
+      const canvas = document.getElementById('circuit-canvas');
+      const analysisDiv = document.getElementById('circuit-analysis');
+      const checkBtn = document.getElementById('check-circuit');
+      const resetBtn = document.getElementById('reset-circuit');
+      const modalOverlay = document.getElementById('modalOverlay');
+      const modalContent = document.getElementById('modalContent');
+
+      // Level selector function
+      function selectLevel(levelNum) {
+        if (levelNum < 1 || levelNum > 4) return;
+        
+        currentLevel = levelNum;
+        const level = levels[levelNum];
+        
+        // Update UI
+        document.getElementById('level-title').innerHTML = `<i class="fas fa-puzzle-piece"></i> ${level.title}`;
+        document.getElementById('level-objective').textContent = level.objective;
+        document.getElementById('level-condition').innerHTML = `<strong>Kondisi:</strong> ${level.condition}`;
+        
+        // Update button states
+        document.querySelectorAll('.level-btn').forEach((btn, idx) => {
+          if (idx + 1 === levelNum) btn.classList.add('active');
+          else btn.classList.remove('active');
+        });
+        
+        // Reset circuit
+        resetCircuit();
+      }
+
+      // Drag and Drop setup
+      function setupDragDrop() {
+        document.querySelectorAll('.component').forEach(component => {
+          component.addEventListener('dragstart', (e) => {
+            e.dataTransfer.effectAllowed = 'copy';
+            e.dataTransfer.setData('componentType', e.target.closest('.component').dataset.component);
+          });
+        });
+      }
+
+      canvas.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'copy';
+        canvas.style.borderColor = '#4CAF50';
+        canvas.style.backgroundColor = '#E8F5E9';
+      });
+
+      canvas.addEventListener('dragleave', () => {
+        canvas.style.borderColor = 'rgba(6,30,50,0.06)';
+        canvas.style.backgroundColor = '#fff';
+      });
+
+      canvas.addEventListener('drop', (e) => {
+        e.preventDefault();
+        const componentType = e.dataTransfer.getData('componentType');
+        addComponent(componentType);
+        canvas.style.borderColor = 'rgba(6,30,50,0.06)';
+        canvas.style.backgroundColor = '#fff';
+      });
+
+      function addComponent(type) {
+        // Check max components for current level
+        const level = levels[currentLevel];
+        if (circuit.components.length >= level.maxComponents) {
+          alert(`⚠️ Maksimal ${level.maxComponents} komponen untuk level ini!`);
+          return;
+        }
+
+        const componentNames = {
+          battery12: { name: 'Baterai 12V', voltage: 12 },
+          battery24: { name: 'Baterai 24V', voltage: 24 },
+          resistor6: { name: 'Resistor 6Ω', resistance: 6 },
+          resistor12: { name: 'Resistor 12Ω', resistance: 12 },
+          resistor4: { name: 'Resistor 4Ω', resistance: 4 },
+          wire: { name: 'Kabel', type: 'wire' },
+          bulb: { name: 'Lampu', type: 'bulb' },
+          switch: { name: 'Switch', type: 'switch' }
+        };
+
+        const comp = componentNames[type];
+        if (!comp) return;
+        
+        circuit.components.push({ type, ...comp });
+
+        // Update voltage (only take first battery found)
+        if (type.startsWith('battery') && circuit.voltage === 0) {
+          circuit.voltage = comp.voltage;
+        }
+
+        // Recalculate resistance (sum all resistors - simplistic, assumes series)
+        circuit.resistance = 0;
+        circuit.components.forEach(c => {
+          if (c.resistance) circuit.resistance += c.resistance;
+        });
+
+        canvas.classList.add('shake');
+        setTimeout(() => canvas.classList.remove('shake'), 300);
+
+        updateAnalysis();
+      }
+
+      function updateAnalysis() {
+        canvas.innerHTML = '';
+        
+        if (circuit.components.length === 0) {
+          canvas.innerHTML = '<p style="color: #999; padding-top: 100px;"><i class="fas fa-arrow-left"></i> Seret komponen ke sini untuk menyusun rangkaian</p>';
+          analysisDiv.innerHTML = '<p>Belum ada komponen yang ditambahkan</p>';
+          return;
+        }
+
+        let html = '<div class="circuit-display">';
+        circuit.components.forEach((comp, idx) => {
+          html += `<div class="circuit-item">
+            <span>${comp.name}</span>
+            <button class="remove-btn" onclick="removeComponent(${idx})">✕</button>
+          </div>`;
+        });
+        html += '</div>';
+        canvas.innerHTML = html;
+
+        // Calculate
+        if (circuit.voltage > 0 && circuit.resistance > 0) {
+          circuit.current = circuit.voltage / circuit.resistance;
+        } else {
+          circuit.current = 0;
+        }
+
+        // Update analysis
+        let analysis = '<div class="analysis-box">';
+        if (circuit.voltage > 0) analysis += `<p>Tegangan: <strong>${circuit.voltage}V</strong></p>`;
+        if (circuit.resistance > 0) analysis += `<p>Hambatan: <strong>${circuit.resistance}Ω</strong></p>`;
+        if (circuit.voltage > 0 && circuit.resistance > 0) {
+          analysis += `<p>Arus: <strong>${circuit.current.toFixed(2)}A</strong></p>`;
+        }
+        analysis += '</div>';
+        analysisDiv.innerHTML = analysis;
+
+        setTimeout(() => renderMathInElement(analysisDiv), 50);
+      }
+
+      function removeComponent(idx) {
+        circuit.components.splice(idx, 1);
+        circuit.voltage = 0;
+        circuit.resistance = 0;
+        circuit.current = 0;
+        setupDragDrop();
+        updateAnalysis();
+      }
+
+      function showModal(isSuccess, data) {
+        const modalIcon = document.getElementById('modalIcon');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalMessage = document.getElementById('modalMessage');
+        const modalInfo = document.getElementById('modalInfo');
+        const modalTips = document.getElementById('modalTips');
+        const tipsList = document.getElementById('tipsList');
+
+        const level = levels[currentLevel];
+
+        if (isSuccess) {
+          modalContent.classList.remove('error-modal');
+          modalContent.classList.add('success-modal');
+          modalIcon.textContent = '✨';
+          modalTitle.textContent = '🎉 Selamat! Rangkaian Benar!';
+          modalMessage.textContent = `Level ${currentLevel} diselesaikan dengan sempurna!`;
+          modalInfo.innerHTML = `
+            <strong>Hasil Analisis:</strong><br>
+            Tegangan: <strong>${data.voltage}V</strong><br>
+            Hambatan: <strong>${data.resistance}Ω</strong><br>
+            Arus: <strong>${data.current.toFixed(2)}A ✓</strong><br>
+            ${currentLevel < 4 ? `<br><button class="modal-btn btn-primary" onclick="selectLevel(${currentLevel + 1})" style="margin-top:10px; background:#4CAF50;">Lanjut ke Level ${currentLevel + 1} →</button>` : ''}
+          `;
+          modalTips.style.display = 'none';
+        } else {
+          modalContent.classList.remove('success-modal');
+          modalContent.classList.add('error-modal');
+          modalIcon.textContent = '⚠️';
+          modalTitle.textContent = '❌ Rangkaian Belum Benar';
+          modalMessage.textContent = 'Periksa kembali komponen dan perhitungan Anda!';
+          modalInfo.innerHTML = `
+            <strong>Target Level ${currentLevel}:</strong><br>
+            Target Arus: <strong>${level.targetCurrent}A</strong><br>
+            Target Hambatan: <strong>${level.targetResistance}Ω</strong><br>
+            <br>
+            <strong>Hasil Sekarang:</strong><br>
+            Arus: <strong>${data.current.toFixed(2)}A</strong> ${Math.abs(data.current - level.targetCurrent) > 0.1 ? '✗' : ''}<br>
+            Hambatan: <strong>${data.resistance}Ω</strong>
+          `;
+          
+          tipsList.innerHTML = '';
+          const hasBattery = circuit.components.some(c => c.type.startsWith('battery'));
+          const hasResistor = circuit.components.some(c => c.resistance);
+          const hasWire = circuit.components.some(c => c.type === 'wire');
+
+          if (!hasBattery) tipsList.innerHTML += `<li>Tambahkan baterai ${level.targetVoltage}V</li>`;
+          if (!hasResistor) tipsList.innerHTML += '<li>Tambahkan minimal satu resistor</li>';
+          if (!hasWire) tipsList.innerHTML += '<li>Tambahkan kabel untuk menghubungkan komponen</li>';
+          if (data.current === 0) tipsList.innerHTML += '<li>Periksa apakah semua komponen terhubung</li>';
+          if (data.current > 0 && Math.abs(data.current - level.targetCurrent) > 0.1) {
+            tipsList.innerHTML += `<li>Arus harus ${level.targetCurrent}A. Gunakan perhitungan: I = V / R = ${level.targetVoltage} / ${level.targetResistance}</li>`;
+          }
+          
+          modalTips.style.display = tipsList.innerHTML ? 'block' : 'none';
+        }
+
+        modalOverlay.classList.add('show');
+      }
+
+      function closeModal() {
+        modalOverlay.classList.remove('show');
+      }
+
+      function closeModalOnBackdrop(event) {
+        // Close modal jika user klik di backdrop (area gelap)
+        if (event.target === modalOverlay) {
+          closeModal();
+        }
+      }
+
+      function resetCircuit() {
+        circuit = { components: [], voltage: 0, resistance: 0, current: 0 };
+        updateAnalysis();
+      }
+
+      checkBtn.addEventListener('click', () => {
+        checkBtn.style.transform = 'scale(0.95)';
+        setTimeout(() => checkBtn.style.transform = 'scale(1)', 200);
+
+        const level = levels[currentLevel];
+        const hasBattery = circuit.components.some(c => c.type.startsWith('battery'));
+        const hasResistor = circuit.components.some(c => c.resistance);
+        const hasWire = circuit.components.some(c => c.type === 'wire');
+        
+        const targetMet = Math.abs(circuit.current - level.targetCurrent) < 0.05;
+        const hasComplete = hasBattery && hasResistor && hasWire;
+
+        const data = {
+          voltage: circuit.voltage,
+          resistance: circuit.resistance,
+          current: circuit.current,
+          hasBattery,
+          hasResistor,
+          hasWire,
+          componentsCount: circuit.components.length
+        };
+
+        if (hasComplete && targetMet) {
+          showModal(true, data);
+        } else {
+          showModal(false, data);
+        }
+      });
+
+      resetBtn.addEventListener('click', () => {
+        resetCircuit();
+      });
+
+      // Init
+      document.addEventListener('DOMContentLoaded', () => {
+        setupDragDrop();
+        selectLevel(1);
+        // Sembunyikan toggle saat card terbuka pada awalnya
+        const infoToggle = document.getElementById('infoToggle');
+        if (infoToggle) infoToggle.style.display = 'none';
+      });
+
+      // Add CSS animation for shake effect
+      const style = document.createElement('style');
+      style.textContent = `
+        @keyframes shake {
+          0%, 100% { transform: translateX(0); }
+          25% { transform: translateX(-5px); }
+          75% { transform: translateX(5px); }
+        }
+        .shake {
+          animation: shake 0.3s ease-in-out;
+        }
+      `;
+      document.head.appendChild(style);
+
+      // Toggle untuk card instruksi (buka / tutup)
+      function toggleInfoCard() {
+        const card = document.getElementById('infoCard');
+        const toggle = document.getElementById('infoToggle');
+        if (!card || !toggle) return;
+        const isClosed = card.classList.toggle('closed');
+        if (isClosed) {
+          toggle.style.display = 'flex';
+          card.setAttribute('aria-hidden', 'true');
+        } else {
+          toggle.style.display = 'none';
+          card.setAttribute('aria-hidden', 'false');
+        }
+      }
+    </script>
+  </body>
+</html>
